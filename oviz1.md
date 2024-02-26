@@ -7,19 +7,23 @@
 5. https://stackedit.io/ // md editor
 ## 数据
 1. 深度图数据
+
 ![深度图数据](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth.png?raw=true)
 [{"name":"NZ_CP05217.1","dep":[51,52]}]
 
 2. 片段详细信息
+
 ![片段详细信息](https://github.com/RaychelleHe/images/blob/main/oviz/gene_info.png?raw=true)
 需要处理成:
 [{"name":"INS1","type":"INS","length":100,"source\_pre":"NZ\_CP058217.1","source\_start":1,"source\_end":100,"dep":[3,4,5]}]
 ***dep存储5000个深度点，怎么分***
 3. 片段顺序
+
 SEG1+SEG3+SEG5+SEG7+INS1+SEG8+SEG10+INS2+SEG11+SEG13+INS3+SEG14+SEG15+INS4+SEG16+SEG17+SEG17+SEG18+SEG19-SEG20+INS5+SEG22+
 需要处理成：
 [{"type":"SEG","num":1,"direction":"+"},{"type":"SEG","num"=2,"direction":"+"}]
 4. 草稿图
+
 ![alt](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth_script.jpg?raw=true "test")
 ## 前期js数据处理代码
 
@@ -51,8 +55,9 @@ svg{
         }
     }
     Component{
-        @let point1 = 0
-        @let point2 = 0
+        y = geneW+10
+        @let pointX = 0
+        @let pointY = y
         @let preNum = 0 // previous SEG number
         @for (seg,i) in new_seg{
             @if seg.type=="SEG"{
@@ -60,17 +65,25 @@ svg{
                 @if flag=1{
                 // 右方邻居基因片
                     Rect{
-                        
+                        x=(seg.num-1)*geneW
+                    	width=geneW
+                    	height=geneW
+                        fill=map.get(seg.num) // **
                     }
+                    preNum = seg.num
                 }
                 @elsif flag>1{
                 // 右方远邻基因 需要画直线
                     Line{
-                        
+                        x1=preNum*geneW;x2=(seg.Num-1)*geneW;y1=1/2*geneW;y2=1/2*geneW;
                     }
                     Rect{
-                        
+                        x=(seg.Num-1)*geneW
+                    	width=geneW
+                    	height=geneW
+                        fill=map.get(seg.num) // **
                     }
+                    preNum = seg.num
                 }
                 @else{
                 // 左方基因或重复基因，需要换行
