@@ -1,8 +1,8 @@
 # oviz绘图
 
-1.https://docs.oviz.org/#/
-2.https://chart.oviz.org/#/charts
-3.https://ncbi.nlm.nih.gov/pmc/articles/PMC9550834/figure/Fig2/
+1. https://docs.oviz.org/#/
+2. https://chart.oviz.org/#/charts
+3. https://ncbi.nlm.nih.gov/pmc/articles/PMC9550834/figure/Fig2/
 ## 数据
 1.深度图数据
 ![深度图数据](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth.png?raw=true)
