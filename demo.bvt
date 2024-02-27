@@ -1,0 +1,182 @@
+svg{
+    x = 10
+    y = 10
+    height=500
+    width=600
+    // 深度信息图
+    // 原始基因片段图
+    // 基因方块
+    Component{
+        @let seg_info = [{"name":"SEG1","length":190,"source":"1-3000"},{"name":"SEG2","length":200,"source":"3001-5000"}]
+        @let new_seg = [{"type":"SEG","num":2,"direction":"+"},{"type":"SEG","num":3,"direction":"+"},{"type":"SEG","num":2,"direction":"+"},{"type":"SEG","num":3,"direction":"-"}]
+        @let map = @colorMap(22) // ** 22 = seg_info.length
+     	@let geneW = 30 // 方块大小
+        // 1.original SEG block
+        Component{
+            @for (seg,i) in seg_info {
+                // 方块
+                Rect{x=i*geneW;width=geneW;height=geneW;fill=map.get(i+1)}
+                // 文字 原子组件内不允许创建子组件
+                Text.centered{text=i+1;x=i*geneW+geneW/2;y=geneW/2}
+            }
+        }
+        // 2.new gene SEG
+        Component{
+            y = geneW+20
+            @let pointX = 0
+            @let pointY = 0
+            @let preNum = 0 // previous SEG number
+            @let preDirection = '+'
+            @let changeDirection = false
+            @for (seg,i) in new_seg{  
+            	Container{
+                    @expr changeDirection = preDirection!=seg.direction
+                    @if seg.type=="SEG" && preDirection=="+"{
+                        @if !changeDirection && seg.num>=preNum+1 {
+                            Line{x1=pointX;x2=(seg.num-1)*geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
+                            Rect{x=(seg.num-1)*geneW;y=pointY;width=geneW;height=geneW;fill=map.get(seg.num)}
+                            Text.centered{text=seg.num;x=seg.num*geneW-0.5*geneW;y=pointY+0.5*geneW;
+                            }
+                            // reset position point and preNum
+                            Container{
+                                @expr pointX=seg.num*geneW
+                                @expr preNum=seg.num
+                            }
+                        }
+                        @elsif !changeDirection && seg.num<=preNum {
+                            Line{x1=pointX;x2=pointX+geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
+                            Container{
+                                x=pointX+geneW
+                                y=pointY+geneW
+                                ArcLine{dashArray = "2,2";r=geneW/2;x1=0;x2=180;}   
+                            }             
+                            Line{x1=pointX+geneW;x2=(seg.num-1)*geneW;y1=pointY+geneW*1.5;y2=pointY+geneW*1.5;dashArray = "2,2";}
+                            Container{
+                                x=(seg.num-1)*geneW
+                                y=pointY+2*geneW
+                                ArcLine{dashArray = "2,2";x1=180;x2=360;r=geneW/2;}
+                            } 
+                            Rect{x=(seg.num-1)*geneW;y=pointY+2*geneW;width=geneW;height=geneW;fill=map.get(seg.num);}
+                            Text.centered{text=seg.num;x=seg.num*geneW-0.5*geneW;y=pointY+2.5*geneW;}
+                            Container{
+                                @expr pointX=seg.num*geneW
+                                @expr pointY=pointY+2*geneW
+                                @expr preNum=seg.num
+                            }   
+                        }
+                        @elsif changeDirection && seg.num>=preNum+1 { 
+                            Line{x1=pointX;x2=seg.num*geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
+                            Container{
+                                x=seg.num*geneW
+                                y=pointY+1.5*geneW
+                                ArcLine{x1=0;x2=180;r=geneW;dashArray = "2,2";}
+                            }
+                            Rect{x=(seg.num-1)*geneW;y=pointY+2*geneW;width=geneW;height=geneW;fill=map.get(seg.num);}
+                            Text.centered{text=seg.num;x=seg.num*geneW-0.5*geneW;y=pointY+2.5*geneW;}
+                            Container{
+                                @expr pointX=(seg.num-1)*geneW
+                                @expr pointY=pointY+geneW*2
+                                @expr preNum=seg.num
+                            }
+                        }
+                        @else{
+                            Container{
+                                x=pointX;
+                                y=pointY+1.5*geneW;
+                                ArcLine{x1=0;x2=180;r=geneW;dashArray = "2,2";}
+                            }
+                            Line{x1=pointX;x2=seg.num*geneW;y1=pointY+2.5*geneW;y2=y1=pointY+2.5*geneW;dashArray = "2,2";}
+                            Rect{x=(seg.num-1)*geneW;y=pointY+2*geneW;width=geneW;height=geneW;fill=map.get(seg.num);}
+                            Text.centered{text=seg.num;x=seg.num*geneW-0.5*geneW;y=pointY+2.5*geneW;}
+                            Container{
+                                @expr pointX=(seg.num-1)*geneW
+                                @expr pointY=pointY+2*geneW
+                                @expr preNum=seg.num
+                            }
+                        }
+                        Container{
+                            @expr preDirection=seg.direction
+                        }
+                    }
+                    @elsif seg.type=="SEG" && preDirection=="-"{
+                        @if !changeDirection && seg.num<=preNum-1 {
+                            Line{x1=pointX;x2=seg.num*geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
+                            Rect{x=(seg.num-1)*geneW;y=pointY;width=geneW;height=geneW;fill=map.get(seg.num)}
+                            Text.centered{text=seg.num;x=seg.num*geneW-0.5*geneW;y=pointY+0.5*geneW;
+                            }
+                            // reset position point and preNum
+                            Container{
+                                @expr pointX=(seg.num-1)*geneW
+                                @expr preNum=seg.num
+                            }
+                        }
+                        @elsif !changeDirection && seg.num>=preNum {
+                            Line{x1=pointX;x2=pointX-geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
+                            Container{
+                                x=pointX-geneW
+                                y=pointY+geneW
+                                ArcLine{dashArray = "2,2";r=geneW/2;x1=180;x2=360;}   
+                            }             
+                            Line{x1=pointX-geneW;x2=seg.num*geneW;y1=pointY+geneW*1.5;y2=pointY+geneW*1.5;dashArray = "2,2";}
+                            Container{
+                                x=seg.num*geneW
+                                y=pointY+2*geneW
+                                ArcLine{dashArray = "2,2";x1=0;x2=180;r=geneW/2;}
+                            } 
+                            Rect{x=(seg.num-1)*geneW;y=pointY+2*geneW;width=geneW;height=geneW;fill=map.get(seg.num);}
+                            Text.centered{text=seg.num;x=seg.num*geneW-0.5*geneW;y=pointY+2.5*geneW;}
+                            Container{
+                                @expr pointX=seg.num*geneW
+                                @expr pointY=pointY+2*geneW
+                                @expr preNum=seg.num
+                            }   
+                        }
+                        @elsif changeDirection && seg.num<=preNum-1 { 
+                            Line{x1=pointX;x2=(seg.num-1)*geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
+                            Container{
+                                x=(seg.num-1)*geneW
+                                y=pointY+1.5*geneW
+                                ArcLine{x1=180;x2=360;r=geneW;dashArray = "2,2";}
+                            }
+                            Rect{x=(seg.num-1)*geneW;y=pointY+2*geneW;width=geneW;height=geneW;fill=map.get(seg.num);}
+                            Text.centered{text=seg.num;x=seg.num*geneW-0.5*geneW;y=pointY+2.5*geneW;}
+                            Container{
+                                @expr pointX=seg.num*geneW
+                                @expr pointY=pointY+geneW*2
+                                @expr preNum=seg.num
+                            }
+                        }
+                        @else{
+                            Container{
+                                x=pointX;
+                                y=pointY+1.5*geneW;
+                                ArcLine{x1=180;x2=360;r=geneW;dashArray = "2,2";}
+                            }
+                            Line{x1=pointX;x2=(seg.num-1)*geneW;y1=pointY+2.5*geneW;y2=y1=pointY+2.5*geneW;dashArray = "2,2";}
+                            Rect{x=(seg.num-1)*geneW;y=pointY+2*geneW;width=geneW;height=geneW;fill=map.get(seg.num);}
+                            Text.centered{text=seg.num;x=seg.num*geneW-0.5*geneW;y=pointY+2.5*geneW;}
+                            Container{
+                                @expr pointX=seg.num*geneW
+                                @expr pointY=pointY+2*geneW
+                                @expr preNum=seg.num
+                            }
+                        }
+                        Container{
+                            @expr preDirection=seg.direction
+                        }
+                    }
+                    // ??基因片方向，基因片有可能同时插入两个吗？现在只保证一次插入一个
+                    @else{
+                    // 插入基因片，三角标记
+                        Triangle {
+                            x=pointX-0.5*geneW
+                            y=pointY-0.25*geneW
+                            width = geneW; height = 0.25*geneW;
+                            orientation = "bottom"
+                        }
+                    }
+                }
+            }
+       }
+    }
+}
