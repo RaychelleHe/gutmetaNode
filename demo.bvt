@@ -42,6 +42,12 @@ svg{
                                 @expr pointX=seg.num*geneW
                                 @expr preNum=seg.num
                             }
+                            Container{
+                                x=(preNum-1)*geneW;
+                                y=pointY+geneW*0.75;
+                                Line{x2=geneW*0.8}
+                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                            }    
                         }
                         @elsif !changeDirection && seg.num<=preNum {
                             Line{x1=pointX;x2=pointX+geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
@@ -62,6 +68,12 @@ svg{
                                 @expr pointX=seg.num*geneW
                                 @expr pointY=pointY+2*geneW
                                 @expr preNum=seg.num
+                            }
+                            Container{
+                                x=(preNum-1)*geneW;
+                                y=pointY+geneW*0.75;
+                                Line{x2=geneW*0.8}
+                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
                             }   
                         }
                         @elsif changeDirection && seg.num>=preNum+1 { 
@@ -78,6 +90,12 @@ svg{
                                 @expr pointY=pointY+geneW*2
                                 @expr preNum=seg.num
                             }
+                            Container{
+                                x=(preNum-1)*geneW;
+                                y=pointY+geneW*0.75;
+                                Line{x2=geneW*0.8}
+                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                            }   
                         }
                         @else{
                             Container{
@@ -93,6 +111,12 @@ svg{
                                 @expr pointY=pointY+2*geneW
                                 @expr preNum=seg.num
                             }
+                           Container{
+                                x=(preNum-1)*geneW;
+                                y=pointY+geneW*0.75;
+                                Line{x2=geneW*0.8}
+                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                            }   
                         }
                         Container{
                             @expr preDirection=seg.direction
@@ -109,6 +133,12 @@ svg{
                                 @expr pointX=(seg.num-1)*geneW
                                 @expr preNum=seg.num
                             }
+                            Container{
+                                x=(preNum-1)*geneW;
+                                y=pointY+geneW*0.75;
+                                Line{x2=geneW*0.8}
+                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                            }   
                         }
                         @elsif !changeDirection && seg.num>=preNum {
                             Line{x1=pointX;x2=pointX-geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
@@ -129,7 +159,13 @@ svg{
                                 @expr pointX=seg.num*geneW
                                 @expr pointY=pointY+2*geneW
                                 @expr preNum=seg.num
-                            }   
+                            }
+                            Container{
+                                x=(preNum-1)*geneW;
+                                y=pointY+geneW*0.75;
+                                Line{x2=geneW*0.8}
+                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                            }      
                         }
                         @elsif changeDirection && seg.num<=preNum-1 { 
                             Line{x1=pointX;x2=(seg.num-1)*geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
@@ -145,6 +181,12 @@ svg{
                                 @expr pointY=pointY+geneW*2
                                 @expr preNum=seg.num
                             }
+                            Container{
+                                x=(preNum-1)*geneW;
+                                y=pointY+geneW*0.75;
+                                Line{x2=geneW*0.8}
+                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                            }   
                         }
                         @else{
                             Container{
@@ -160,6 +202,13 @@ svg{
                                 @expr pointY=pointY+2*geneW
                                 @expr preNum=seg.num
                             }
+                            Container{
+                                x=(preNum-1)*geneW;
+                                y=pointY+geneW*0.75;
+                                Line{x2=geneW*0.8}
+                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                            }     
+                            
                         }
                         Container{
                             @expr preDirection=seg.direction
