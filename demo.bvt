@@ -7,12 +7,40 @@ svg{
     // 原始基因片段图
     // 基因方块
     Component{
+		@let n = 100
+		@let seg_depth = [[0,53],[1,59],[2,58],[3,62]]
         @let seg_info = [{"name":"SEG1","length":190,"source":"1-3000"},{"name":"SEG2","length":200,"source":"3001-5000"}]
         @let new_seg = [{"type":"SEG","num":2,"direction":"+"},{"type":"SEG","num":3,"direction":"+"},{"type":"SEG","num":2,"direction":"+"},{"type":"SEG","num":3,"direction":"-"}]
         @let map = @colorMap(22) // ** 22 = seg_info.length
      	@let geneW = 30 // 方块大小
-        // 1.original SEG block
+        // 1.depth
+		Component{
+			// width = geneW*22
+			width = geneW*22
+            height = 400
+			XYPlot {
+				padding = 20
+				hasPadding = false
+				data = seg_depth
+				dataHandler = {
+					default: {
+						values: d => d,
+						pos: d => d[0],
+						min: d => d[1],
+						value: d => d[1],
+					}
+				}
+				Axis("left") {}
+                Polyline { 
+                    points = @scaled(seg_depth)
+                    stroke = "red"
+                    strokeWidth = 3
+                }
+            }
+        }
+		// 2.original SEG block
         Component{
+			y = 200
             @for (seg,i) in seg_info {
                 // 方块
                 Rect{x=i*geneW;width=geneW;height=geneW;fill=map.get(i+1)}
@@ -22,7 +50,7 @@ svg{
         }
         // 2.new gene SEG
         Component{
-            y = geneW+20
+            y = geneW+220
             @let pointX = 0
             @let pointY = 0
             @let preNum = 0 // previous SEG number
@@ -91,10 +119,10 @@ svg{
                                 @expr preNum=seg.num
                             }
                             Container{
-                                x=(preNum-1)*geneW;
+                                x=pointX;
                                 y=pointY+geneW*0.75;
-                                Line{x2=geneW*0.8}
-                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                                Line{x1=0.2*geneW;x2=geneW}
+                                Triangle{y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="left"}
                             }   
                         }
                         @else{
@@ -112,10 +140,10 @@ svg{
                                 @expr preNum=seg.num
                             }
                            Container{
-                                x=(preNum-1)*geneW;
+                                x=pointX;
                                 y=pointY+geneW*0.75;
-                                Line{x2=geneW*0.8}
-                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                                Line{x1=0.2*geneW;x2=geneW}
+                                Triangle{y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="left"}
                             }   
                         }
                         Container{
@@ -134,10 +162,10 @@ svg{
                                 @expr preNum=seg.num
                             }
                             Container{
-                                x=(preNum-1)*geneW;
+                                x=pointX;
                                 y=pointY+geneW*0.75;
-                                Line{x2=geneW*0.8}
-                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
+                                Line{x1=0.2*geneW;x2=geneW}
+                                Triangle{y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="left"}
                             }   
                         }
                         @elsif !changeDirection && seg.num>=preNum {
@@ -161,11 +189,11 @@ svg{
                                 @expr preNum=seg.num
                             }
                             Container{
-                                x=(preNum-1)*geneW;
+                                x=pointX;
                                 y=pointY+geneW*0.75;
-                                Line{x2=geneW*0.8}
-                                Triangle{x=geneW*0.75;y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="right"}
-                            }      
+                                Line{x1=0.2*geneW;x2=geneW}
+                                Triangle{y=-0.1*geneW;width=geneW*0.2;height=0.2*geneW;orientation="left"}
+                            }     
                         }
                         @elsif changeDirection && seg.num<=preNum-1 { 
                             Line{x1=pointX;x2=(seg.num-1)*geneW;y1=pointY+geneW/2;y2=pointY+geneW/2;dashArray = "2,2";}
