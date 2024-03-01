@@ -9,35 +9,36 @@ svg{
     Component{
 		@let n = 100
 		@let seg_depth = [[0,53],[1,59],[2,58],[3,62]]
-        @let seg_info = [{"name":"SEG1","length":190,"source":"1-3000"},{"name":"SEG2","length":200,"source":"3001-5000"}]
-        @let new_seg = [{"type":"SEG","num":2,"direction":"+"},{"type":"SEG","num":3,"direction":"+"},{"type":"SEG","num":2,"direction":"+"},{"type":"SEG","num":3,"direction":"-"}]
-        @let map = @colorMap(22) // ** 22 = seg_info.length
-     	@let geneW = 30 // 方块大小
-        // 1.depth
+	        @let seg_info = [{"name":"SEG1","length":190,"source":"1-3000"},{"name":"SEG2","length":200,"source":"3001-5000"}]
+	        @let new_seg = [{"type":"SEG","num":2,"direction":"+"},{"type":"SEG","num":3,"direction":"+"},{"type":"SEG","num":2,"direction":"+"},{"type":"SEG","num":3,"direction":"-"}]
+	        @let map = @colorMap(22) // ** 22 = seg_info.length
+	     	@let geneW = 30 // 方块大小
+        	// 1.depth
 		Component{
-			// width = geneW*22
 			width = geneW*22
-            height = 400
+			height = 200
 			XYPlot {
-				padding = 20
+				height = 100%
+				// padding = 40
+				@let t1 = {y1:[53,54,60,79]}
+				data = t1
+				stackedData = {stacked: ['y1']}
 				hasPadding = false
-				data = seg_depth
-				dataHandler = {
-					default: {
-						values: d => d,
-						pos: d => d[0],
-						min: d => d[1],
-						value: d => d[1],
+				StackedArea {
+					data = "stacked"
+					:children (data) {
+						Path {
+							d = data.path
+							fill = "red"
+							style:fill-opacity = 0.5
+							stroke = "#000"
+						}
 					}
 				}
-				Axis("left") {}
-                Polyline { 
-                    points = @scaled(seg_depth)
-                    stroke = "red"
-                    strokeWidth = 3
-                }
-            }
-        }
+				Axis("bottom") { y = 100% ; tickInterval = 1 }
+				Axis("left");
+			}
+		}
 		// 2.original SEG block
         Component{
 			y = 200
