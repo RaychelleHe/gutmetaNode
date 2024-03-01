@@ -1,0 +1,27 @@
+svg {
+	width = auto
+	height = 500
+	Component {
+		XYPlot {
+			height = 100%
+			padding = 40
+			@let t1 = {y1:[53,54,60,79]}
+			data = t1
+			stackedData = {stacked: ['y1']}
+			hasPadding = false
+			StackedArea {
+				data = "stacked"
+				:children (data) {
+					Path {
+						d = data.path
+						fill = "red"
+						style:fill-opacity = 0.5
+						stroke = "#000"
+					}
+				}
+			}
+			Axis("bottom") { y = 100% ; tickInterval = 1 }
+			Axis("left");
+		}
+	}
+}
