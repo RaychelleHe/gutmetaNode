@@ -30,5 +30,23 @@ SEG1+SEG3+SEG5+SEG7+INS1+SEG8+SEG10+INS2+SEG11+SEG13+INS3+SEG14+SEG15+INS4+SEG16
 
 ![alt](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth_script.jpg?raw=true "test")
 ## 前期js数据处理代码
+python 处理深度代码
 
+import pandas as pd
+import math
+data = pd.read_csv("S8.depth", sep="\t",nrows=20,header=None,names=["gene","position","depth"])
+data.sort_values("position",inplace=True)
+depth = data["depth"].values
+depth
+
+n = 100
+segs = []
+def getDepthArr(start,end):
+    ar = depth[start-1,end]
+    res = [np.mean(ar[i:i + n]) for i in range(0, len(ar), n)]
+segsDepthArr = []
+for i in segs:
+    segDepthArr = getDepthArr(i.start,i.end)
+    segsDepthArr.apped(segDepthArr)
+getDepthArr
 ## oviz drawing logic
