@@ -33,14 +33,13 @@ SEG1+SEG3+SEG5+SEG7+INS1+SEG8+SEG10+INS2+SEG11+SEG13+INS3+SEG14+SEG15+INS4+SEG16
 python 处理深度代码
 ```
 import pandas as pd
+import numpy as np
 import math
-data = pd.read_csv("S8.depth", sep="\t",header=None,names=["gene","position","depth"])
+data = pd.read_csv("S8.depth.gz", sep="\t",header=None,names=["gene","position","depth"],compression='gzip')
 data
 data.sort_values("position",inplace=True)
 depth = data["depth"].values
-len(depth)
 
-n = 100
 segs = [
   { "name": 'SEG1', "start": '1', "end": '359665' },
   { "name": 'SEG2', "start": '359666', "end": '361748' },
@@ -65,16 +64,29 @@ segs = [
   { "name": 'SEG21', "start": '4406938', "end": '4408356' },
   { "name": 'SEG22', "start": '4408357', "end": '5055406' }
 ]
-def getDepthArr(start,end):
-    start = int(start)
-    end = int(end)
+n = 100
+def getDepthArr(start,end,length):
     ar = depth[start-1:end]
-    res = [np.mean(ar[i:i + n]) for i in range(0, len(ar), n)]
+    flag = length%n
+    windowSize = int(length/n)
+    if flag!=0:
+        res = [np.mean(ar[i:i + windowSize]) for i in range(0, n*windowSize, windowSize)]
+    else:
+        res = [np.mean(ar[i:i + windowSize]) for i in range(0, length, windowSize)]
+    print("res",len(res))
+    res.append(res[-1])
+    res.insert(0,res[0])
+    return res
 segsDepthArr = []
 for i in segs:
-    # print(i)
-    segDepthArr = getDepthArr(i["start"],i["end"])
+    start = int(i["start"])
+    end = int(i["end"])
+    length = (end-start+1)
+    # print("size",size)
+    segDepthArr = getDepthArr(start,end,length)
     segsDepthArr.append(segDepthArr)
-segsDepthArr
+# segsDepthArr
+np.savetxt("segsDepthArr.csv",segsDepthArr,delimiter=",",header = " ")
+# segsDepthArr
 ```
 ## oviz drawing logic
