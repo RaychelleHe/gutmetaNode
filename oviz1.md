@@ -93,10 +93,10 @@ def getDepthArr(start,end,length):
     flag = length%n
     windowSize = int(length/n)
     if flag!=0:
-        res = [np.mean(ar[i:i + windowSize]) for i in range(0, n*windowSize, windowSize)]
+        res = [np.mean(ar[i:i + windowSize]) for i in range(0, (n-1)*windowSize, windowSize)]
+        res.append(np.mean(ar[(n-1)*windowSize:]))
     else:
         res = [np.mean(ar[i:i + windowSize]) for i in range(0, length, windowSize)]
-    print("res",len(res))
     res.append(res[-1])
     res.insert(0,res[0])
     return res
@@ -105,11 +105,8 @@ for i in segs:
     start = int(i["start"])
     end = int(i["end"])
     length = (end-start+1)
-    # print("size",size)
     segDepthArr = getDepthArr(start,end,length)
     segsDepthArr.append(segDepthArr)
-# segsDepthArr
-np.savetxt("segsDepthArr.csv",segsDepthArr,delimiter=",",header = " ")
-# segsDepthArr
+# np.savetxt("segsDepthArr.csv",segsDepthArr,delimiter=",",header = " ")
 ```
 ## oviz drawing logic
