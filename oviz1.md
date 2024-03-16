@@ -13,6 +13,7 @@
 
 ![深度图数据](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth.png?raw=true)
 [{"name":"NZ_CP05217.1","dep":[51,52]}]
+data handled by python
 ```
 [60.84980629858631,
  0.0011707595659623071,
@@ -44,13 +45,10 @@ lenAr = [359665, 2083, 73360, 2699, 541796, 1440, 545743, 243748, 2298, 183329, 
 ![片段详细信息](https://github.com/RaychelleHe/images/blob/main/oviz/gene_info.png?raw=true)
 需要处理成:
 [{"name":"INS1","type":"INS","length":100,"source\_pre":"NZ\_CP058217.1","source\_start":1,"source\_end":100,"dep":[3,4,5]}]
-***dep存储5000个深度点，怎么分***
 3. 片段顺序
-
 SEG1+SEG3+SEG5+SEG7+INS1+SEG8+SEG10+INS2+SEG11+SEG13+INS3+SEG14+SEG15+INS4+SEG16+SEG17+SEG17+SEG18+SEG19-SEG20+INS5+SEG22+
 需要处理成：
 [{"type":"SEG","num":1,"direction":"+"},{"type":"SEG","num"=2,"direction":"+"}]
-*插入数据方向，插入数据有多个怎么排列？*
 4. 草稿图
 
 ![alt](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth_script.jpg?raw=true "test")
@@ -103,12 +101,20 @@ def getDepthArr(start,end,length):
     res.insert(0,res[0])
     return res
 segsDepthArr = []
+avg = []
 for i in segs:
     start = int(i["start"])
     end = int(i["end"])
     length = (end-start+1)
     segDepthArr = getDepthArr(start,end,length)
     segsDepthArr.append(segDepthArr)
+    avg.append(np.mean(segDepthArr))
 # np.savetxt("segsDepthArr.csv",segsDepthArr,delimiter=",",header = " ")
+# np.savetxt("segsDepthAvg.csv",avg,delimiter=",",header = " ")
 ```
+## gene picture
+*logic* :put gene and variant information into seg array.
+1. gene handler function
+2. variant handler function
+
 ## oviz drawing logic
