@@ -50,7 +50,7 @@ svg{
                     on:click = window.alert("Clicked")
                     stroke = "black"
                 }
-                Text.centered{text=i+1;x=(d.start+d.end)/2;y=geneW/2;}
+                Text.centered{text=i+1;x=@scaledX(d.start+d.end)/2;y=geneW/2;}
                 Text{
                     y = -5
                     x = @scaledX(d.start)
