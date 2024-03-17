@@ -119,11 +119,13 @@ for i in segs:
 
 ## oviz drawing logic
 1.**top seg part**  
+
 **structure**:  
     1.true scale seg block  
     2.depth area  
     3.rescale seg block  
     4.new seg sequence area  
+    
 **data needed**:  
     [start,end,newSegInfo,depth,drag,segSequence,clickedArr]  
     **start**:first seg's start  
@@ -133,24 +135,32 @@ for i in segs:
     **drag**:ref([x1,x2])  
     **segSequence**:new seg sequence picture  
     **clickedArr**:n segs status-clicked  or not,format:[null,"active",...]  
+    
 **original data**:  
     [originalSeg,segSequence,segsDepthArr,avgArr]  
+    
 **data handler function**:  
     [newSegParse,depthDrawData]  
+    
 **own variants**:  
     [segW,clickedFun]  
     **segW**:seg block's width  
     **clickedFun**:react to clicking action  
+    
 **components**:  
     [SegBlock]  
+    
 2.**bottom gene part**  
+
 **structure**:  
     1.top variant area  
     2.positive gene area  
     3.negtive gene area  
-    4.drag bar 
+    4.drag bar  
+    
 **data needed**:  
     [newSegInfo,drag,clickedArr]  
+    
 **data handler function**:  
     [genesLoaded,variantsLoaded]  
     **genesLoaded**:load genes data into newSegInfo  
