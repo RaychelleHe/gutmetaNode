@@ -118,3 +118,28 @@ for i in segs:
 2. variant handler function
 
 ## oviz drawing logic
+1.top seg part  
+structure:
+    1.true scale seg block
+    2.depth area
+    3.rescale seg block
+    4.new seg sequence area
+data needed:
+    [start,end,newSegInfo,depth,drag,segSequence,clickedArr]  
+original data:  
+    [originalSeg,segSequence,segsDepthArr,avgArr]  
+data handler function:  
+    [newSegParse,depthDrawData]  
+variants:  
+    [segW,clickedFun,]  
+components:  
+    [SegBlock]
+2.bottom gene part  
+structure:  
+    1.top variant area
+    2.positive gene area
+    3.negtive gene area
+    4.drag bar
+data needed:  
+    [newSegInfo,drag,clickedArr]
+   
