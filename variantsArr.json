@@ -1,0 +1,259 @@
+[
+    [],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 404396,
+            "Variants": "C>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=53;AD=49,4;source=GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 434223,
+            "Variants": "C>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=2;AD=0,2;source=freebayes,GATK"
+        }
+    ],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 481005,
+            "Variants": "G>A",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=4;AD=0,4;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 481191,
+            "Variants": "A>G",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=17;AD=0,17;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 574152,
+            "Variants": "C>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=61;AD=58,3;source=GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 712299,
+            "Variants": "A>AG",
+            "Type": "INS",
+            "Description": "GT=1/1;DP=31;AD=25;source=svaba"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 712407,
+            "Variants": "C>CG",
+            "Type": "INS",
+            "Description": "GT=1/1;DP=28;AD=26;source=svaba"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 712440,
+            "Variants": "C>CT",
+            "Type": "INS",
+            "Description": "GT=1/1;DP=34;AD=30;source=svaba"
+        }
+    ],
+    [],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 1594787,
+            "Variants": "G>A",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=63;AD=59,4;source=GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 1633546,
+            "Variants": "GT>G",
+            "Type": "DEL",
+            "Description": "GT=1/1;DP=51;AD=48;source=svaba"
+        }
+    ],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 1773062,
+            "Variants": "T>A",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=49;AD=0,49;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 1923445,
+            "Variants": "G>A",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=5;AD=0,5;source=freebayes,GATK"
+        }
+    ],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 2594737,
+            "Variants": "C>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=53;AD=0,53;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 2657368,
+            "Variants": "C>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=6;AD=0,6;source=freebayes,GATK"
+        }
+    ],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3032018,
+            "Variants": "G>A",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=52;AD=47,5;source=GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3084702,
+            "Variants": "C>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=6;AD=0,6;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3086840,
+            "Variants": "G>C",
+            "Type": "SNP",
+            "Description": "GT=1;DP=3;AD=0,3;source=freebayes"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3086863,
+            "Variants": "C>T",
+            "Type": "SNP",
+            "Description": "GT=1;DP=2;AD=0,2;source=freebayes"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3086871,
+            "Variants": "A>G",
+            "Type": "SNP",
+            "Description": "GT=1;DP=2;AD=0,2;source=freebayes"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3086888,
+            "Variants": "G>T",
+            "Type": "SNP",
+            "Description": "GT=1;DP=2;AD=0,2;source=freebayes"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3087035,
+            "Variants": "G>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=2;AD=0,2;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3087192,
+            "Variants": "A>G",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=2;AD=0,2;source=freebayes,GATK"
+        }
+    ],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3716511,
+            "Variants": "A>G",
+            "Type": "SNP",
+            "Description": "GT=1;DP=4;AD=0,4;source=freebayes"
+        }
+    ],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3736513,
+            "Variants": "G>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=59;AD=0,59;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3799338,
+            "Variants": "C>A",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=39;AD=0,39;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3877241,
+            "Variants": "T>TA",
+            "Type": "INS",
+            "Description": "GT=1/1;DP=53;AD=47;source=svaba"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3877271,
+            "Variants": "T>TA",
+            "Type": "INS",
+            "Description": "GT=1/1;DP=51;AD=48;source=svaba"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 3877324,
+            "Variants": "A>AT",
+            "Type": "INS",
+            "Description": "GT=1/1;DP=50;AD=48;source=svaba"
+        }
+    ],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 4091542,
+            "Variants": "A>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=5;AD=0,5;source=freebayes,GATK"
+        }
+    ],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 4295466,
+            "Variants": "T>A",
+            "Type": "SNP",
+            "Description": "GT=0|1;DP=74;AD=64,10;source=GATK"
+        }
+    ],
+    [],
+    [
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 4637102,
+            "Variants": "C>T",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=71;AD=0,71;source=freebayes,GATK"
+        },
+        {
+            "Chr": "NZ_CP058217.1",
+            "Pos": 5012769,
+            "Variants": "C>A",
+            "Type": "SNP",
+            "Description": "GT=0/1;DP=49;AD=0,49;source=GATK"
+        }
+    ]
+]
