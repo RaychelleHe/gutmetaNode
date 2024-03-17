@@ -1,5 +1,6 @@
 # oviz绘图
 
+## 工具
 1. https://docs.oviz.org/#/
 2. https://chart.oviz.org/#/charts
 3. https://ncbi.nlm.nih.gov/pmc/articles/PMC9550834/figure/Fig2/
@@ -12,48 +13,26 @@
 1. 深度图数据
 
 ![深度图数据](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth.png?raw=true)
-[{"name":"NZ_CP05217.1","dep":[51,52]}]
-data handled by python
-```
-[60.84980629858631,
- 0.0011707595659623071,
- 60.95721497646851,
- 0.0,
- 60.529254520076954,
- 0.0,
- 60.35006451149271,
- 60.558694212310165,
- 0.0,
- 59.3891564378357,
- 57.88968065709217,
- 0.0005446623093681917,
- 59.588996582664386,
- 60.695036354878496,
- 60.09729649435533,
- 59.87216657003896,
- 70.88255624830578,
- 61.20990102623311,
- 53.94211017740429,
- 62.16095596686125,
- 0.0014005602240896359,
- 61.87944614225016]
-
-lenAr = [359665, 2083, 73360, 2699, 541796, 1440, 545743, 243748, 2298, 183329, 989420, 1026, 440844, 329057, 1815, 237399, 1448, 337982, 304, 111481, 1419, 647050]
-```
+[{"name":"NZ_CP05217.1"}]
 2. 片段详细信息
 
 ![片段详细信息](https://github.com/RaychelleHe/images/blob/main/oviz/gene_info.png?raw=true)
-需要处理成:
-[{"name":"INS1","type":"INS","length":100,"source\_pre":"NZ\_CP058217.1","source\_start":1,"source\_end":100,"dep":[3,4,5]}]
+前端处理成:
+[{"name":"INS1","length":100,"source":"NZ\_CP058217.1","start":1,"end":100}]
 3. 片段顺序
 SEG1+SEG3+SEG5+SEG7+INS1+SEG8+SEG10+INS2+SEG11+SEG13+INS3+SEG14+SEG15+INS4+SEG16+SEG17+SEG17+SEG18+SEG19-SEG20+INS5+SEG22+
-需要处理成：
-[{"type":"SEG","num":1,"direction":"+"},{"type":"SEG","num"=2,"direction":"+"}]
-4. 草稿图
+前端处理成：
+[{"type":"SEG","num":1,"direction":"+"},{"type":"SEG","num"=2,"direction":"+"}]  
+4. 基因数据  
+[{"Chr":,"Start":,"End","Strand","Description":,"Sequence":,"Name":}]
+5. 突变数据  
+[{"Pos":,"Type":,"Chr","Variants":,"Description":}]
+6. 草稿图
 
 ![alt](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth_script.jpg?raw=true "test")
 ## 前期js数据处理代码
-python 处理深度代码
+1.**python 处理深度代码**  
+处理逻辑：遍历新处理的newSegInfo数组，将深度平均分成n个点，简单将length/n,如果是整数平分，如果不是整数，例如1.3，每份1个，最后一份多n*0.3个点。
 ```
 import pandas as pd
 import numpy as np
@@ -63,30 +42,8 @@ data
 data.sort_values("position",inplace=True)
 depth = data["depth"].values
 
-segs = [
-  { "name": 'SEG1', "start": '1', "end": '359665' },
-  { "name": 'SEG2', "start": '359666', "end": '361748' },
-  { "name": 'SEG3', "start": '361749', "end": '435108' },
-  { "name": 'SEG4', "start": '435109', "end": '437807' },
-  { "name": 'SEG5', "start": '437808', "end": '979603' },
-  { "name": 'SEG6', "start": '979604', "end": '981043' },
-  { "name": 'SEG7', "start": '981044', "end": '1526786' },
-  { "name": 'SEG8', "start": '1526787', "end": '1770534' },
-  { "name": 'SEG9', "start": '1770535', "end": '1772832' },
-  { "name": 'SEG10', "start": '1772833', "end": '1956161' },
-  { "name": 'SEG11', "start": '1956162', "end": '2945581' },
-  { "name": 'SEG12', "start": '2945582', "end": '2946607' },
-  { "name": 'SEG13', "start": '2946608', "end": '3387451' },
-  { "name": 'SEG14', "start": '3387452', "end": '3716508' },
-  { "name": 'SEG15', "start": '3716509', "end": '3718323' },
-  { "name": 'SEG16', "start": '3718324', "end": '3955722' },
-  { "name": 'SEG17', "start": '3955723', "end": '3957170' },
-  { "name": 'SEG18', "start": '3957171', "end": '4295152' },
-  { "name": 'SEG19', "start": '4295153', "end": '4295456' },
-  { "name": 'SEG20', "start": '4295457', "end": '4406937' },
-  { "name": 'SEG21', "start": '4406938', "end": '4408356' },
-  { "name": 'SEG22', "start": '4408357', "end": '5055406' }
-]
+with open('newSegInfo.json') as file1:
+  segs = json.load(file1)
 n = 100
 def getDepthArr(start,end,length):
     ar = depth[start-1:end]
@@ -112,6 +69,59 @@ for i in segs:
 # np.savetxt("segsDepthArr.csv",segsDepthArr,delimiter=",",header = " ")
 # np.savetxt("segsDepthAvg.csv",avg,delimiter=",",header = " ")
 ```
+**2.python 处理genes、variants数据代码**
+```
+import pandas as pd
+import numpy as np
+import math
+import json
+
+with open('newSegInfo.json') as file1:
+  newSegInfo = json.load(file1)
+with open('genesData.json') as file2:
+    genes = json.load(file2)
+with open('S8.variants.json') as file3:
+    variants = json.load(file3)
+print(newSegInfo[0])
+print(genes[-1])
+print(variants[0])
+
+genesArr = []
+variantsArr = []
+def genesLoaded(genes,segs):
+    for i in segs:
+        start = i["start"]
+        end = i["end"]
+        arr = []
+        for j in genes:
+            if (j["Start"])>=start and j["End"]<=end :
+                arr.append(j)
+            elif j["Start"]>=start and j["Start"]<=end:
+                item = j
+                item["End"] = end
+                arr.append(item)
+            elif j["End"]>=start and j["End"]<=end:
+                item = j
+                item["Start"] = start
+                arr.append(item)
+        genesArr.append(arr)
+def variantsLoaded(variants,segs):
+    for i in segs:
+        start = i["start"]
+        end = i["end"]
+        arr = []
+        for j in variants:
+            if j["Pos"]>=start and j["Pos"]<end:
+                arr.append(j)
+        variantsArr.append(arr)
+genesLoaded(genes,newSegInfo)
+variantsLoaded(variants,newSegInfo)
+with open('genesArr.json', 'w') as file:
+    json.dump(genesArr, file, indent=4)
+with open('variantsArr.json', 'w') as file:
+    json.dump(variantsArr, file, indent=4)
+```
+
 ## gene picture
 *logic* :put gene and variant information into seg array.
 1. gene handler function
