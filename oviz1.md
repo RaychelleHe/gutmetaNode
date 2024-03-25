@@ -174,6 +174,18 @@ with open('variantsArr.json', 'w') as file:
 **data handler function**:  
     [genesLoaded,variantsLoaded]  
     **genesLoaded**:load genes data into newSegInfo  
-    **variantsLoaded**:load variants data into newSegInfo  
+    **variantsLoaded**:load variants data into newSegInfo 
+**variant part logic** 
+```
+@let flag = vl%2==0 
+@let deg = 180/(vl+4)
+@let mid = flag? vl/2-1+0.5:Math.floor(vl/2)
+@let vw = 10  // the width of variant flag-circle,triangle
+@let drawX = i>mid? vl*8*Math.tan(Math.ceil(i-mid)*deg*Math.PI/180)-vw/2+@scaledX(variant.Pos):vl*8*Math.tan(Math.floor(i-mid)*deg*Math.PI/180)-vw/2+@scaledX(variant.Pos)
+vl代表要绘制的variant的数量，flag用来表示数量是否是偶数。deg代表单位偏斜角度，相对于90度垂直线来说，向右偏斜为正，向左偏斜为负，+4是让点位不要变成0度和180度，以及点位不需要考虑如果variant数量是偶数如何除出deg，可以增加4，不要减小4，4越增，variant越居中聚拢。mid用来计算需要偏斜多少个deg。
+vw代表一个variant的三角形、圆形的宽度（直径）。drawX代表三角形、圆形开始绘制的x坐标。
+drawX->如果i>mid,i在右边，需要正偏斜，vl*8是是斜线的高度h, Math.tan(Math.ceil(i-mid)*deg*Math.PI/180)是偏斜角度的tan正切值，h*tan = 距离真实variant.Pos的距离，-vw+2去突变标记图形的中间点，+@scaledX(variant.Pos)得到当前的实际绘图坐标。三元表达式，判断正负，如果在右边需要取Math.ceil,如果在左边需要取Math.floor得到正确偏斜deg的份数。
+```
+在rows里面，只有container可以不预先指定高度，根据子组件确定高度，实现auto效果。Component不可以。@let声明必须在Component...其他组件的第一个括号内，不可以在@if(){}内。自定义组件this.$el.$parent是自定义组件，this.$el.$parent.$parent是模板。vue里的函数不可以通过template传进自定义组件，只能在template中重新定义函数调用vue函数，再传进自定义组件。交互刷新通过双向绑定ref。
     
    
