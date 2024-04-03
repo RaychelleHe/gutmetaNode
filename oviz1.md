@@ -22,7 +22,21 @@
 3. 片段顺序
 SEG1+SEG3+SEG5+SEG7+INS1+SEG8+SEG10+INS2+SEG11+SEG13+INS3+SEG14+SEG15+INS4+SEG16+SEG17+SEG17+SEG18+SEG19-SEG20+INS5+SEG22+
 前端处理成：
-[{"type":"SEG","num":1,"direction":"+"},{"type":"SEG","num"=2,"direction":"+"}]  
+[{"type":"SEG","num":1,"direction":"+"},{"type":"SEG","num"=2,"direction":"+"}] 
+处理代码：
+```
+function translateHap(seq){
+    const res = []
+    const a1 = a.match(/[A-Z]*[0-9]*\+/g)
+    a1.forEach((d)=>{
+        let index = d.search(/[+-]/)
+        res.push({type:d.match(/[A-Z]+/)[0],num:d.match(/[0-9]+/)[0],direction:d.match(/[+-]+/)[0]})
+    })
+    return res
+}
+const a = "SEG1+SEG3+SEG5+SEG7+SEG9+SEG11+SEG13+SEG15+"
+console.log(translateHap(a))
+```
 4. 基因数据  
 [{"Chr":,"Start":,"End","Strand","Description":,"Sequence":,"Name":}]
 5. 突变数据  
