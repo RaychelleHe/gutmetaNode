@@ -1,114 +1,163 @@
 import Crux from 'crux'
-// import { useMessage } from 'naive-ui'
-//
-const { Component } = Crux
-// interface MyComponentOption {
-//     // props
-//     start: number
-//     end: number
-//     segDisplayIndex: number | string
-//     variantsArr: []
-//     genesArr: []
-//     colorMap: any
-//     updateRange: (range: any) => void
-// }
 
+const { Component } = Crux
 class GeneArea extends Component {
     render() {
         return this.t`Component {
-            @let segDisplayIndex = prop.segDisplayIndex
-            @let variantsArr = prop.variantsArr
-            @let genesArr = prop.genesArr
-            @let testColor = @colorMap(5,["#0ac492","#ffff80","#8585e0","#ff6666","#3a91a5"])
-            // @let colorMap = prop.map
-            // @let updateRange = ((range)=>{
-            //     this.xScale = range
-            //     this.draw()
-            //     console.log(this)
-            // })
             height = 200
             width = 100%
-            //xScale = @scaleLinear(prop.start,prop.end)
-            // xScale = prop.geneRange
-            // Text("lovvvv"+prop.start+prop.end){}
-            // top rectangle background and variant arrow
             Rows{
-                
                 // ref = "geneArea"
                 width = 100%
+                // 1.top rectangle background and variant marks
                 Component{
+                    @let vl = prop.variantsData.length
+                    @let hUnit =6 // 默认取6个突变时的高度
                     xScale = @scaleLinear(prop.genesStart,prop.genesEnd)
                     ref = "variant"
                     // components in rows need height setting to show.Relate height with displayedSpotLayers here.
-                    height = variantsArr[segDisplayIndex].length * 12
+                    height = hUnit*12 // 默认取6个突变时的高度
                     // background rect
                     Rect.full {
-                        // detached = true
                         fill = @color("areaBg")
                     }
-                    // upper line
-                    Line {
-                        //detached = true // same as the effect of float in css
-                        x2 = 100% // set end point to 100%
-                        stroke = "#666"
-                        shapeRendering = "crispEdges"
-                    }
-                    // variant arrow
                     Component {
-                        y = 100%
-                        @for (variant, i) in variantsArr[segDisplayIndex] {
-                            // @if (variant.Type=="SNP"){
-
-                            // }
-                            // @elsif(variant.Type=="DEL"){
-
-                            // }
-                            // @else{
-
-                            // }
-                            Path {
-                                key = i
-                                x = @scaledX(variant.Pos); y = i * -12
-                                // array path orbit,x right is +,y downis +.
-                                d = "M0,0 L3,-4 L1.5,-4 L1.5,-8 L-1.5,-8 L-1.5,-4 L-3,-4 z"
-                                fill =  "blue"
-                                behavior:tooltip {
-                                    content = ("variant_Chr:"+variant.Chr+"<br>variant_Pos:"+variant.Pos+"<br>variant_Variants:"+variant.Variants+"<br>variant_Type:"+variant.Type+"<br>variant_Decription:"+variant.Decription)
+                        @let flag = vl%2==0
+                        @let deg = 180/(vl+4)
+                        @let mid = flag? vl/2-1+0.5:Math.floor(vl/2)
+                        @let vw = 10  // the width of variant flag-circle,triangle
+                        @for (variant, i) in prop.variantsData {        
+                            Component{
+                                @let drawX = i>mid? hUnit*8*Math.tan(Math.ceil(i-mid)*deg*Math.PI/180)-vw/2+@scaledX(variant.Pos):hUnit*8*Math.tan(Math.floor(i-mid)*deg*Math.PI/180)-vw/2+@scaledX(variant.Pos)
+                                @if (variant.Type=="SNP"){
+                                    Circle{
+                                        x = drawX
+                                        r = vw/2
+                                        stroke = "black"
+                                        fill = "red"
+                                        behavior:tooltip{
+                                            content = ("variant_Chr:"+variant.Chr+"<br>variant_Pos:"+variant.Pos+"<br>variant_Variants:"+variant.Start+"<br>variant_Type"+variant.End+"<br>variant_Description"+variant.Description)
+                                        }
+                                    }
+                                }
+                                @elsif(variant.Type=="DEL"){
+                                    Triangle {
+                                        x = drawX
+                                        width = vw
+                                        height = vw
+                                        stroke = "black"
+                                        fill = "red"
+                                        behavior:tooltip{
+                                            content = ("variant_Chr:"+variant.Chr+"<br>variant_Pos:"+variant.Pos+"<br>variant_Variants:"+variant.Start+"<br>variant_Type"+variant.End+"<br>variant_Description"+variant.Description)
+                                        }
+                                    }
+                                }
+                                @else{
+                                    Triangle{
+                                        x = drawX
+                                        width = vw
+                                        height = vw
+                                        orientation = "bottom"
+                                        fill = "red"
+                                        stroke = "black"
+                                        behavior:tooltip{
+                                            content = ("variant_Chr:"+variant.Chr+"<br>variant_Pos:"+variant.Pos+"<br>variant_Variants:"+variant.Start+"<br>variant_Type"+variant.End+"<br>variant_Description"+variant.Description)
+                                        }
+                                    }
+                                }
+                                Line{
+                                    x1 = drawX+vw/2
+                                    x2 = drawX+vw/2
+                                    y1 = vw
+                                    y2 = 4*hUnit
+                                    stroke = @color("variantLine")
+                                    strokeWidth = 2
+                                    stage:active {
+                                        stroke = "#00e1ff"
+                                    }
+                                    stage = prop.variantHover[i]
+                                    on:mouseenter = ((ev,el)=>{
+                                        el.stage = "active"
+                                        prop.variantHoverFun("active",i)
+                                        el.$parent.redraw() 
+                                    })
+                                    on:mouseleave = ((ev,el)=>{
+                                        el.stage = null
+                                        prop.variantHoverFun(null,i)
+                                        el.$parent.redraw() 
+                                    })
+                                }
+                                Line{
+                                    x1 = drawX+vw/2
+                                    x2 = @scaledX(variant.Pos)
+                                    y1 = 4*hUnit
+                                    y2 = 12*hUnit
+                                    stroke = @color("variantLine")
+                                    strokeWidth = 2
+                                    stage:active {
+                                        stroke = "#00e1ff"
+                                    }
+                                    stage = prop.variantHover[i]
+                                    on:mouseenter = ((ev,el)=>{
+                                        el.stage = "active"
+                                        prop.variantHoverFun("active",i)
+                                        el.$parent.redraw() 
+                                    })
+                                    on:mouseleave = ((ev,el)=>{
+                                        el.stage = null
+                                        prop.variantHoverFun(null,i)
+                                        el.$parent.redraw() 
+                                    })
                                 }
                             }
                         }
                     }
                 }
+                // 2.gene-variantLine area
                 Component{
                     ref= "gene"
                     height = 100
                     width = 100%
                     xScale = @scaleLinear(prop.genesStart,prop.genesEnd)
-                    // variant line
+                    // 2.1 variant line
                     Component {
                         // detached = true
                         height = 100%
-                        @for (variant, i) in variantsArr[segDisplayIndex] {
+                        @for (variant, i) in prop.variantsData {
                             Line {
                                 key = i
                                 x1 = @scaledX(variant.Pos); x2 = @scaledX(variant.Pos);
                                 y1 = 0; y2 = 100%
-                                stroke = @color("spotLine")
+                                stroke = @color("variantLine")//** 
+                                strokeWidth = 2
                                 shapeRendering = "crispEdges"
+                                stage:active {
+                                    stroke = "#00e1ff"
+                                }
+                                stage = prop.variantHover[i]
+                                on:mouseenter = ((ev,el)=>{
+                                    el.stage = "active"
+                                    prop.variantHoverFun("active",i)
+                                    el.$parent.redraw() 
+                                })
+                                on:mouseleave = ((ev,el)=>{
+                                    el.stage = null
+                                    prop.variantHoverFun(null,i)
+                                    el.$parent.redraw() 
+                                })
                             }
                         }
                     }
+                    // 2.2 gene area
                     Rows {
                         width = 100%
-                        height = 100% // ** I temporarily set the static height,should detached
-                        // xScale = @scaleLinear(seg.start,seg.end)
-                        // *positive area
+                        height = 100% 
+                        // 2.2.1 positive area
                         Container {
-                            height = 50% // ** I am not sure here
+                            height = 50%
                             width = 100%
-                            // xScale = @scaleLinear(seg.start,seg.end)
-                            Rect.full { fill = "rgba(160,160,255,.1)" ;detached = true}
-                            @for (gene,i) in genesArr[segDisplayIndex]{
+                            Rect.full { fill = "rgba(160,160,255,.1)"}
+                            @for (gene,i) in prop.genesData{
                                 @if (gene.Strand=="+"){
                                     Component{
                                         y = 50%
@@ -124,22 +173,9 @@ class GeneArea extends Component {
                                                 content = ("gene_Name:"+gene.Name+"<br>gene_Description:"+gene.Decription+"<br>gene_Start:"+gene.Start+"<br>gene_End"+gene.End)
                                             }
                                             on:click = (()=>{
-                                                prop.updateContent(gene)
-                                                prop.alertInfo()})
+                                                prop.clickGene(gene)})
+                                                //prop.alertInfo()})
                                         }
-                                        // Arrow {
-                                        //     @let l = @scaledX(gene.End)-@scaledX(gene.Start)
-                                        //     x = @scaledX(gene.Start); x2 = @scaledX(gene.Start)+l*0.9;
-                                        //     shaft.strokeWidth = 30
-                                        //     head.width = 50
-                                        //     head.height = l*0.1
-                                        //     fill = prop.colorMap.get(i)
-                                        //     stroke = "black"
-                                        //     behavior:tooltip{
-                                        //         content = ("gene_Name:"+gene.Name+"<br>gene_Description:"+gene.Decription+"<br>gene_Start:"+gene.Start+"<br>gene_End"+gene.End)
-                                        //     }
-                                        //     on:click = this.alertInfo(gene)
-                                        // }
                                     }
                                 }
                             }
@@ -148,7 +184,7 @@ class GeneArea extends Component {
                                 roundEndTicks = true
                             }
                         }
-                        //annotation left
+                        //2.2.2 annotation left
                         Component {
                             height = 1
                             Text {
@@ -163,13 +199,12 @@ class GeneArea extends Component {
                                 x2 = 100%; shapeRendering = "crispEdges"
                             }
                         }
-                        // negtive area
+                        // 2.2.3 negtive area
                         Container {
                             height = 50%
                             width = 100%
-                            // padding-b = 13
-                            Rect.full { fill = "rgba(255,255,160,.1)" } // **I temporarily delete the detached = true; 
-                            @for (gene,i) in genesArr[segDisplayIndex]{
+                            Rect.full { fill = "rgba(255,255,160,.1)" }
+                            @for (gene,i) in prop.genesData{
                                 @if (gene.Strand=="-"){
                                     Component{
                                         y = 50%
@@ -185,25 +220,11 @@ class GeneArea extends Component {
                                             }
                                             //stroke = "black"
                                             on:click = (()=>{
-                                                prop.updateContent(gene)
-                                                prop.alertInfo()
+                                                prop.clickGene(gene)
+                                                //prop.alertInfo()
                                                 
                                             })
                                         }
-                                        // Arrow {
-                                        //     @let l  = @scaledX(gene.End)-@scaledX(gene.Start)
-                                        //     x2 = @scaledX(gene.Start)+0.1*l; x = @scaledX(gene.End);
-                                        //     shaft.strokeWidth = 30
-                                        //     stroke = "black"
-                                        //     fill = prop.colorMap.get(i)
-                                        //     head.width = 40
-                                        //     head.height = l*0.1
-                                        //     // head.fill = "blue"
-                                        //     behavior:tooltip{
-                                        //         content = ("gene_Name:"+gene.Name+"<br>gene_Description:"+gene.Decription+"<br>gene_Start:"+gene.Start+"<br>gene_End"+gene.End)
-                                        //     }
-                                        //     on:click = this.alertInfo(gene)
-                                        // }
                                     }
                                 }
                             }
@@ -215,11 +236,11 @@ class GeneArea extends Component {
                         }
                     }
                 }
-                // drag area
+                // 3.drag area
                 Component{
                     y = 30; height = 30
-                    //xScale = @scaleLinear(prop.dragStart,prop.dragEnd)
-                    xScale = @scaleLinear(prop.genesStart,prop.genesEnd)
+                    xScale = @scaleLinear(prop.dragStart,prop.dragEnd)
+                    // xScale = @scaleLinear(prop.genesStart,prop.genesEnd)
                     // draw external rect shape
                     Rect {
                         width = 100%; height = 100%; fill = @color("brushBg")
@@ -228,68 +249,105 @@ class GeneArea extends Component {
                     Line {
                         y1 = 50%; y2 = 50%; x2 = 100%; stroke = "#aaa"
                     }
-                    //Component{
-                        //xScale = @scaleLinear(prop.genesStart,prop.genesEnd)
-                        // draw internal geneBar
-                        Component.full {
-                            // clip rect to show geneBar,cannot clip same area twice!!
-                            clip = @clip("bound")
-                            // Pos
-                            @for (gene,i) in genesArr[segDisplayIndex] {
-                                @if (gene.Strand==="+"){
-                                    Rect {
-                                        y =0
-                                        key = i
-                                        x = @scaledX(gene.Start)
-                                        width = @scaledX(gene.End - gene.Start+1)
-                                        height = 14; fill = @color("stPos"); fillOpacity = 0.8
-                                        behavior:tooltip{content = gene.Start+"+"+gene.End}
-                                    }
+                    Component{
+                        //@for (gene,i) in prop.genesArr[prop.segDisplayIndex] {
+                        @for (gene,i) in prop.dragGenes {
+                            @if (gene.Strand==="+"){
+                                Rect {
+                                    x = @scaledX(gene.Start)
+                                    fill = @color("genePos")
+                                    height = 14
+                                    width = @scaledX(gene.End)-@scaledX(gene.Start)+1
                                 }
-                                @else{
-                                    Rect {
-                                        key = i
-                                        x = @scaledX(gene.Start); 
-                                        y = 16
-                                        width = @scaledX(gene.End - gene.Start+1)
-                                        height = 14; fill =  @color("stNeg"); fillOpacity = 0.8
-                                    }
+                            }
+                            @else{
+                                Rect {
+                                    y = 16
+                                    x = @scaledX(gene.Start)
+                                    fill = @color("geneNeg")
+                                    height = 14
+                                    width = @scaledX(gene.End)-@scaledX(gene.Start)+1
                                 }
                             }
                         }
+                    }
                         // draw variant triangle
-                        @for (variant, i) in variantsArr[segDisplayIndex] {
-                            Path {
-                                key = i
-                                d =   "M4,0 L0,10 L-4,0 z"
-                                // top triangle "M4,0 L0,-10 L-4,0 z" :
-                                x = @scaledX(variant.Pos)
-                                y = 0
-                                fill = @color("stPos")
-                            }
-                        }  
-                    //}
-                    //Component{
-                        // xScale = @scaleLinear(prop.dragStart,prop.dragEnd)
-                        // Brush {
-                        //     ref = "brush"
-                        //     height = 30
-                        //     cornerRadius = 4
-                        //     // range = [prop.dragStart,prop.dragEnd]
-                        //     range = [prop.dragStart,prop.dragEnd]
-                        //     onBrushEnd = @bind(prop.updateRange)
-                        //     brush.stroke = "#ffbb4d"
-                        //     brush.strokeWidth = 2
-                        // }
-                    // brush which can choose specific area
-                  //  }
+                    // @for (variant, i) in prop.variantsArr[prop.segDisplayIndex] {
+                    @for (variant, i) in prop.dragVariants {
+                        Path {
+                            key = i
+                            d =   "M4,0 L0,10 L-4,0 z"
+                            // top triangle "M4,0 L0,-10 L-4,0 z" :
+                            x = @scaledX(variant.Pos)
+                            y = 0
+                            fill = @color("variantMark")
+                        }
+                    }  
+                    Component{
+                        // brush which can choose specific area
+                        Brush {
+                            ref = "brush"
+                            height = 30
+                            cornerRadius = 4
+                            range = [prop.dragStart,prop.dragEnd]
+                            onBrushEnd = @bind(prop.updateRange)
+                            brush.stroke = "#ffbb4d"
+                            brush.strokeWidth = 2
+                        }
+                    
+                   }
+                    // Component{
+                    //     Rect{
+                    //         @let rangeL = @scaledX(prop.range[1])-@scaledX(prop.range[0])
+                    //         x = @scaledX(prop.range[0])
+                    //         width = rangeL
+                    //         height = 30
+                    //         fill = "white"
+                    //         fillOpacity = 0.2
+                    //         cornerRadius = 5
+                    //         behavior:drag {
+                    //             direction = "x"
+                    //             validRangeX = [rangeL, @scaledX(prop.dragEnd)-rangeL]
+                    //             onDrag = ((ev, el, delta) => {
+                    //                 updateRange("both",(prop.dragEnd-prop.dragStart)/660*delta[0])
+                    //                 //el.$parent.redraw()
+                    //             })
+                    //         }
+                    //     }
+                    //     Rect{
+                    //         x = @scaledX(prop.range[0])
+                    //         y = 5
+                    //         height = 20
+                    //         width = 1
+                    //         behavior:drag {
+                    //             direction = "x"
+                    //             validRangeX = [prop.dragStart, prop.range[1]]
+                    //             onDrag = ((ev, el, delta) => {
+                    //                 updateRange("left",(prop.dragEnd-prop.dragStart)/660*delta[0])
+                    //                 //el.$parent.redraw()
+                    //             })
+                    //         }
+                    //     }
+                    //     Rect{
+                    //         x = @scaledX(prop.range[0])
+                    //         y = 5
+                    //         height = 20
+                    //         width = 1
+                    //         behavior:drag {
+                    //             direction = "x"
+                    //             validRangeX = [prop.range[0], prop.dragEnd]
+                    //             onDrag = ((ev, el, delta) => {
+                    //                 updateRange("right",(prop.dragEnd-prop.dragStart)/segW*segLength*delta[0])
+                    //                 //el.$parent.redraw()
+                    //             })
+                    //         }
+                    //     }
+                    // }
                 }
             }   
         }`
     }
-    // updateDispayedGenes(range){
-    //     this.prop.updateGenesDispayedRange(range)
-    //     this.redraw()
-    // }
+
+    // eslint-disable-next-line
 }
 export default GeneArea

@@ -2,7 +2,7 @@ svg{
     //x = 10
     //y = 10
     height=800
-    width=900
+    width=800
     // 深度信息图
     // 原始基因片段图
     // 基因方块
@@ -14,26 +14,52 @@ svg{
         @let hoverFun = (d,i)=>{
             hoverArr.value[i] = d
             }
-        @let clickedFun = (i)=>{
-            segDisplayIndex.value = i
-            genesStart.value = newSegInfo[i].start
-            genesEnd.value = newSegInfo[i].end
-            dragStart.value = newSegInfo[i].start
-            dragEnd.value = newSegInfo[i].end
+        // @let clickSeg = (i)=>{
+        //     segDisplayIndex.value = i
+        //     genesStart.value = newSegInfo[i].start
+        //     genesEnd.value = newSegInfo[i].end
+        //     dragStart.value = newSegInfo[i].start
+        //     dragEnd.value = newSegInfo[i].end
+        // }
+        @let clickGene = (content)=>{
+            alertContent.value=content
+            showModal.value = true
+            }
+        @let variantHoverFun = (d,i)=>{
+            variantHover.value[i] = d
         }
-        @let updateContent = (content)=>{alertContent.value=content}
         width = segW*segLength
-    x = 40
-        y = 40
+        x = 40
+        y = 60
         Rows{
             width = 100%
             // 1.true scale
             Component{
+                @let minTextL = (end-start)/(segW*segLength)*0.25*segW
                 ref = "trueScale"
                 height = segW
                 width = 100%
-                // Axis("top"){}
                 xScale = @scaleLinear(start,end)
+                Component{
+                    @let tl = textArr.length
+                    @let textMargin = segW*segLength/(tl-1)
+                    @for (text, i) in textArr {        
+                        Component{
+                            Text{
+                                y = -25
+                                x = textMargin*i-textMargin/2
+                                rotation = @rotate(-45)
+                                text = text
+                            }
+                            Line{
+                                x1 = textMargin*i
+                                y1 = -20
+                                x2 = @scaledX(text)
+                            }
+                        }
+                    }
+                }
+                // }
                 @for (seg,i) in newSegInfo{
                     SegBlock{
                         ref = "trueScale"+i
@@ -44,21 +70,11 @@ svg{
                         color = map.get(i%5)
                         hoverArr = hoverArr.value
                         hoverFun = hoverFun
-                        clickedFun = clickedFun
+                        clickSeg = clickSeg
                         data = seg
                     }
-                    Text.centered{text=i+1;x=(seg.start+seg.end)/2;y=segW/2;}
-                    Text{
-                        y = -5
-                        x = @scaledX(seg.start)
-                        rotation = @rotate(-45)
-                        text = seg.start
-                    }
-                    Text{
-                        y = -5
-                        x = @scaledX(seg.end)
-                        rotation = @rotate(-45)
-                        text = seg.end
+                    @if(seg.length>minTextL){
+                        Text.centered{text=i+1;x=(@scaledX(seg.start)+@scaledX(seg.end))/2;y=50%}
                     }
                     // left line
                     Line{
@@ -78,12 +94,8 @@ svg{
             }
             // 2.depth
             Component{
-                // y = segW+margin
                 y = margin*2
-                //width = segW*segLength
                 height = 2*segW
-                // x = 40
-                // @let t1 = [[53,56,53],[54,67,63]]
                 Axis {
                         y = 100%
                         height = -2*segW
@@ -137,7 +149,7 @@ svg{
                         color = map.get(i%5)
                         hoverArr = hoverArr.value
                         hoverFun = hoverFun
-                        clickedFun = clickedFun
+                        clickSeg = clickSeg
                         data = seg
                     }
                     // 文字 原子组件内不允许创建子组件
@@ -145,11 +157,11 @@ svg{
                 }
             }
             // 4.new gene SEG
-            Component{
+            Container{
                 ref = "newSeq"
-                detached = true
+                //detached = true
                 y = margin*2
-                height = 200
+                // height = 200
                 @let pointX = 0
                 @let pointY = 0
                 @let preNum = 0 // previous SEG number
@@ -157,6 +169,7 @@ svg{
                 @let changeDirection = false
                 @for (seg,i) in segSequence{  
                     Container{
+                        //detached = true
                         @expr changeDirection = preDirection!=seg.direction
                         @if seg.type=="SEG" && preDirection=="+"{
                             @if !changeDirection && seg.num>=preNum+1 {
@@ -174,7 +187,7 @@ svg{
                                         color = map.get(r)
                                         hoverArr = hoverArr.value
                                         hoverFun = hoverFun
-                                        clickedFun = clickedFun
+                                        clickSeg = clickSeg
                                         data = newSegInfo[seg.num-1]
                                     }
                                 }
@@ -218,7 +231,7 @@ svg{
                                         color = map.get(r)
                                         hoverArr = hoverArr.value
                                         hoverFun = hoverFun
-                                        clickedFun = clickedFun
+                                        clickSeg = clickSeg
                                         data = newSegInfo[seg.num-1]
                                     }
                                 }
@@ -255,7 +268,7 @@ svg{
                                         color = map.get(r)
                                         hoverArr = hoverArr.value
                                         hoverFun = hoverFun
-                                        clickedFun = clickedFun
+                                        clickSeg = clickSeg
                                         data = newSegInfo[seg.num-1]
                                     }
                                 }
@@ -292,7 +305,7 @@ svg{
                                         color = map.get(r)
                                         hoverArr = hoverArr.value
                                         hoverFun = hoverFun
-                                        clickedFun = clickedFun
+                                        clickSeg = clickSeg
                                         data = newSegInfo[seg.num-1]
                                     }
                                 }
@@ -316,7 +329,7 @@ svg{
                         @elsif seg.type=="SEG" && preDirection=="-"{
                             @if !changeDirection && seg.num<=preNum-1 {
                                 Line{x1=pointX;x2=seg.num*segW;y1=pointY+segW/2;y2=pointY+segW/2;dashArray = "2,2";}
-                                Component{
+                                Container{
                                     @let r = (seg.num-1)%5 
                                     // Rect{x=(seg.num-1)*segW;y=pointY;width=segW;height=segW;fill=map.get(r);stroke="black"}
                                     SegBlock{
@@ -329,7 +342,7 @@ svg{
                                         color = map.get(r)
                                         hoverArr = hoverArr.value
                                         hoverFun = hoverFun
-                                        clickedFun = clickedFun
+                                        clickSeg = clickSeg
                                         data = newSegInfo[seg.num-1]
                                     }
                                 }
@@ -373,7 +386,7 @@ svg{
                                         color = map.get(r)
                                         hoverArr = hoverArr.value
                                         hoverFun = hoverFun
-                                        clickedFun = clickedFun
+                                        clickSeg = clickSeg
                                         data = newSegInfo[seg.num-1]
                                     }
                                 }
@@ -410,7 +423,7 @@ svg{
                                         color = map.get(r)
                                         hoverArr = hoverArr.value
                                         hoverFun = hoverFun
-                                        clickedFun = clickedFun
+                                        clickSeg = clickSeg
                                         data = newSegInfo[seg.num-1]
                                     }
                                 }
@@ -447,7 +460,7 @@ svg{
                                         color = map.get(r)
                                         hoverArr = hoverArr.value
                                         hoverFun = hoverFun
-                                        clickedFun = clickedFun
+                                        clickSeg = clickSeg
                                         data = newSegInfo[seg.num-1]
                                     }
                                 }
@@ -493,18 +506,25 @@ svg{
                 GeneArea{
                     ref = "geneArea"
                     segDisplayIndex = segDisplayIndex.value
-                    genesArr = genesArr
-                    variantsArr = variantsArr
+                    //genesArr = genesArr
+                    //variantsArr = variantsArr
                     genesStart = genesStart.value
                     genesEnd = genesEnd.value
+                    variantsData = variantsData.value
+                    genesData = genesData.value
                     // start = start.value
                     // end = end.value
                     colorMap = map
                     updateRange = updateRange
-                    alertInfo = alertInfo
-                    updateContent = updateContent
+                    //alertInfo = alertInfo
+                    clickGene = clickGene
                     dragStart = dragStart.value
                     dragEnd = dragEnd.value
+                    variantHover = variantHover.value
+                    variantHoverFun = variantHoverFun
+                    range = range
+                    dragGenes = dragGenes.value
+                    dragVariants = dragVariants.value
                 }
             }
         }
