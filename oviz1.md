@@ -51,6 +51,8 @@ console.log(translateHap(a))
 import pandas as pd
 import numpy as np
 import math
+import json
+
 data = pd.read_csv("S8.depth.gz", sep="\t",header=None,names=["gene","position","depth"],compression='gzip')
 data
 data.sort_values("position",inplace=True)
@@ -94,12 +96,9 @@ with open('newSegInfo.json') as file1:
   newSegInfo = json.load(file1)
 with open('genesData.json') as file2:
     genes = json.load(file2)
-with open('S8.variants.json') as file3:
+with open('S7.variants.json') as file3:
     variants = json.load(file3)
-print(newSegInfo[0])
-print(genes[-1])
-print(variants[0])
-
+    
 genesArr = []
 variantsArr = []
 def genesLoaded(genes,segs):
@@ -108,16 +107,8 @@ def genesLoaded(genes,segs):
         end = i["end"]
         arr = []
         for j in genes:
-            if (j["Start"])>=start and j["End"]<=end :
+            if (j["Start"]>=start and j["Start"]<=end) or  (j["End"]>=start and j["End"]<=end):
                 arr.append(j)
-            elif j["Start"]>=start and j["Start"]<=end:
-                item = j
-                item["End"] = end
-                arr.append(item)
-            elif j["End"]>=start and j["End"]<=end:
-                item = j
-                item["Start"] = start
-                arr.append(item)
         genesArr.append(arr)
 def variantsLoaded(variants,segs):
     for i in segs:
@@ -130,12 +121,11 @@ def variantsLoaded(variants,segs):
         variantsArr.append(arr)
 genesLoaded(genes,newSegInfo)
 variantsLoaded(variants,newSegInfo)
-with open('genesArr.json', 'w') as file:
+with open('S7genesArr2.0.json', 'w') as file:
     json.dump(genesArr, file, indent=4)
-with open('variantsArr.json', 'w') as file:
+with open('S7variantsArr2.0.json', 'w') as file:
     json.dump(variantsArr, file, indent=4)
 ```
-
 ## gene picture
 *logic* :put gene and variant information into seg array.
 1. gene handler function
