@@ -45,6 +45,24 @@ console.log(translateHap(a))
 
 ![alt](https://github.com/RaychelleHe/images/blob/main/oviz/gene_depth_script.jpg?raw=true "test")
 ## 前期js数据处理代码
+生成newSegInfo格式
+```
+# segs_info = [{"Name":i["Name"], "Length":i["Length"],"Source":}]
+import pandas as pd
+data = pd.read_csv("S7.seg_info.tsv",delimiter = "\t")
+import re
+import json
+res = []
+for index,i in data.iterrows():
+    # print(index)
+    Source = re.search('([A-Za-z0-9_.]+):([0-9]+)-([0-9]+)',i["Source"])
+    item = {"name":i["Name"],"length":i["Length"],"source":Source.group(1),"start":int(Source.group(2)),"end":int(Source.group(3)) }
+    res.append(item)
+with open('S7newSegInfo.json', 'w') as file:
+    json.dump(res, file, indent=4)
+```
+
+
 1.**python 处理深度代码**  
 处理逻辑：遍历新处理的newSegInfo数组，将深度平均分成n个点，简单将length/n,如果是整数平分，如果不是整数，例如1.3，每份1个，最后一份多n*0.3个点。
 ```
@@ -53,13 +71,13 @@ import numpy as np
 import math
 import json
 
-data = pd.read_csv("S8.depth.gz", sep="\t",header=None,names=["gene","position","depth"],compression='gzip')
+data = pd.read_csv("S7.depth.gz", sep="\t",header=None,names=["gene","position","depth"],compression='gzip')
 data
 data.sort_values("position",inplace=True)
 depth = data["depth"].values
-
-with open('newSegInfo.json') as file1:
+with open('S7newSegInfo.json') as file1:
   segs = json.load(file1)
+
 n = 100
 def getDepthArr(start,end,length):
     ar = depth[start-1:end]
