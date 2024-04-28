@@ -125,7 +125,7 @@ def genesLoaded(genes,segs):
         end = i["end"]
         arr = []
         for j in genes:
-            if (j["Start"]>=start and j["Start"]<=end) or  (j["End"]>=start and j["End"]<=end):
+            if (j["Start"]>=start and j["Start"]<=end) or  (j["End"]>=start and j["End"]<=end) or (j["Start"]<start and j["End"]>end):
                 arr.append(j)
         genesArr.append(arr)
 def variantsLoaded(variants,segs):
